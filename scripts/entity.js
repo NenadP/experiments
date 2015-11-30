@@ -1,5 +1,7 @@
 define("Entity", function () {
-	function Entity(id, type, canvas) {
+	function Entity(x, y, id, type, canvas) {
+		this.x = x;
+		this.y = y;
 		this.id = id;
 		this.type = type;
 		this.canvas = canvas;

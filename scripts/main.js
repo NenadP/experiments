@@ -6,74 +6,87 @@ define("main", ["Entity", "Canvas"], function (Entity, Canvas) {
 			1: "one"
 		};
 		this.map = [];
+		this.entities = [];
 		this.canvas = new Canvas(tilesNum);
+	},_getRandomBinary = function () {
+		return Math.random() > 0.5 ? 1 : 0;
 	};
 
-	Main.prototype.draw = function () {
-		var entities = [];
-		this.clear();
-		for (var i = 0; i < this.canvas.tilesNum; i++) {
-			var entity = new Entity(i, this.tiles[this.map[i]], this.canvas);
-			entities.push(entity);
-			this.canvas.element.innerHTML += entity.addToCanvas();
-		}
+	Main.prototype.addEntities = function () {
+		var that = this;
 
+		this.canvas.iterateMap(function (x, y, i) {
+			var entity = new Entity(x, y, i, that.tiles[that.map[x][y]], that.canvas);
+			that.entities.push(entity);
+		});
 		/*
 		 * Find connected entities
 		 */
-		for (var i = 0; i < this.canvas.tilesNum; i++) {
+		this.canvas.iterateMap(function (x, y, i) {
 			var fields = {
-				top: i - this.canvas.dim,
-				bottom: i + this.canvas.dim,
+				top: i - that.canvas.dim,
+				bottom: i + that.canvas.dim,
 				left: i - 1,
 				right: i + 1
 			};
 
-			for (var connection in entities[i].connections) {
-				if (entities[i].connections.hasOwnProperty(connection)) {
-					if (entities[fields[connection]] && entities[fields[connection]].type === entities[i].type) {
-						if (!this.canvas.fields[i].isEdge[connection]) {
-							entities[i].connections[connection] = true;
-						}
+			for (var connection in that.entities[i].connections) {
+				if (that.entities[i].connections.hasOwnProperty(connection) &&
+						(that.entities[fields[connection]] && that.entities[fields[connection]].type === that.entities[i].type)) {
+					if (!that.canvas.fields[i].isEdge[connection]) {
+						that.entities[i].connections[connection] = true;
 					}
 				}
 			}
-			entities[i].setEdges();
-		}
-		entities = [];
+		})
+	};
+
+	Main.prototype.draw = function () {
+		var entity = {},
+				that = this;
+		this.clear();
+
+		this.canvas.iterateMap(function (x, y, i) {
+			entity = that.entities[i];
+
+			that.canvas.element.innerHTML += entity.addToCanvas();
+			that.entities[i].setEdges();
+		});
+		this.entities = [];
 	};
 
 	Main.prototype.clear = function () {
 		this.canvas.element.innerHTML = "";
 	};
 
-
 	Main.prototype.randomMain = function () {
 		var randomMain = [],
-			rand = 0;
-		for (var i = 0; i < this.canvas.tilesNum; i++) {
-			rand = Math.random();
-			rand = rand > 0.5 ? 1 : 0;
-			randomMain.push(rand);
-		}
+				rand = 0;
+
+		this.canvas.iterateMap(function (x) {
+			if (!randomMain[x]){
+				randomMain.push([]);
+			}
+			randomMain[x].push(_getRandomBinary());
+		});
 		this.map = randomMain;
 	};
 
-	Main.prototype.reDraw = function (type, runTimes) {
-		var that = this,
-			timesRun = 0;
+	Main.prototype.tick = function (type, runTimes) {
+		var that = this;
 
-		function _draw() {
+		function _tick() {
 			that[type]();
+			that.addEntities();
 			that.draw();
 		}
 
-		while (runTimes !== timesRun) {
-			setTimeout(_draw, 1000 * timesRun);
-			timesRun += 1;
+		while (runTimes !== 0) {
+			setTimeout(_tick, 1000 * runTimes);
+			runTimes -= 1;
 		}
 	};
 
 	map = new Main(64);
-	map.reDraw("randomMain", 100);
+	map.tick("randomMain", 100);
 });
