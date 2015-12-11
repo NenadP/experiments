@@ -3,14 +3,14 @@ body {
 	font-family: "Lucida Console", Monaco, monospace;
 }
 
-#canvas {
+#map {
 	position: relative;
 	width: 512px;
 	height: 512px;
 	margin: 29px auto;
 }
 
-#canvas div {
+#map div {
 	position: relative;
 	float: left;
 	width: 58px;
@@ -28,22 +28,22 @@ body {
 	background-color: #fff500;
 }
 
-#canvas div.connected-top {
+#map div.connected-top {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 }
 
-#canvas div.connected-bottom {
+#map div.connected-bottom {
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
 
-#canvas div.connected-left {
+#map div.connected-left {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 }
 
-#canvas div.connected-right {
+#map div.connected-right {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }

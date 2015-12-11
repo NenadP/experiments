@@ -1,13 +1,13 @@
-define("Canvas", function () {
-	function Canvas(tilesNum) {
+define("Map", function () {
+	function Map(tilesNum) {
 		this.tilesNum = tilesNum;
 		this.dim = Math.sqrt(this.tilesNum);
-		this.element = document.getElementById("canvas");
+		this.element = document.getElementById("map");
 		this.fields = [];
 		this.registerFields();
 	}
 
-	Canvas.prototype.iterateMap = function (fn) {
+	Map.prototype.iterateMap = function (fn) {
 		var x = 0,
 				i = 0,
 				that = this,
@@ -25,7 +25,7 @@ define("Canvas", function () {
 		iterateRow();
 	};
 
-	Canvas.prototype.registerFields = function () {
+	Map.prototype.registerFields = function () {
 		var that = this;
 
 		this.iterateMap(function (x, y, i) {
@@ -58,5 +58,5 @@ define("Canvas", function () {
 			that.fields.push(field);
 		})
 	};
-	return Canvas;
+	return Map;
 });
