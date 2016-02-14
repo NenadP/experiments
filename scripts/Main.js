@@ -1,17 +1,17 @@
-define("main", ["Entity", "Map"], function (Entity, Map) {
+define("Main", ["Entity", "Map"], function (Entity, Map) {
 
 	var Main = function (tilesNum) {
-		this.tiles = {
-			0: "zero",
-			1: "one"
-		};
-		this.mapEntities = [];
-		this.entities = [];
-		this.map = new Map(tilesNum);
-	},
-		_getRandomBinary = function () {
-		return Math.random() > 0.5 ? 1 : 0;
-	};
+				this.tiles = {
+					0: "zero",
+					1: "one"
+				};
+				this.mapEntities = [];
+				this.entities = [];
+				this.map = new Map(tilesNum);
+			},
+			_getRandomBinary = function () {
+				return Math.random() > 0.5 ? 1 : 0;
+			};
 
 	Main.prototype.addEntities = function () {
 		var that = this;
